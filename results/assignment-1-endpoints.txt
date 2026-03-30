@@ -1,0 +1,56 @@
+=== Lambda Zip done. Function URL: https://qgfab366kibeatc5dk4byxkzda0dwyid.lambda-url.us-east-1.on.aws/ ===
+[ec2-user@ip-172-31-74-96 lsc-lab4-aws-cloud-r2-emila2025]$ aws lambda invoke --function-name lsc-knn-zip \
+  --cli-binary-format raw-in-base64-out \
+  --payload "$(python3 -c 'import json; q=json.load(open("loadtest/query.json")); print(json.dumps({"body": json.dumps(q)}))')" \
+  /tmp/out.json
+
+cat /tmp/out.json
+{
+    "StatusCode": 200,
+    "ExecutedVersion": "$LATEST"
+}
+{"statusCode": 200, "headers": {"Content-Type": "application/json", "X-Server-Time-Ms": "81.081", "X-Instance-Id": "2026/03/28/[$LATEST]8d27c9b76fec44b4a5ddee9543b4f548", "X-Cold-Start": "true"}, "body": "{\"results\": [{\"index\": 35859, \"distance\": 12.001459121704102}, {\"index\": 24682, \"distance\": 12.059946060180664}, {\"index\": 35397, \"distance\": 12.487079620361328}, {\"index\": 20160, \"distance\": 12.489519119262695}, {\"index\": 30454, \"distance\": 12.499402046203613}], \"query_time_ms\": 81.081, \"instance_id\": \"2026/03/28/[$LATEST]8d27c9b76fec44b4a5ddee9543b4f548\", \"cold_start\": true}"}[ec2-user@ip-172-31-74-96 lsc-lab4-aws-cloud-r2-emila2025]$ ^C
+
+
+
+
+
+
+=== Lambda Container done. Function URL: https://7wox5uei2kdi3anauqvk2pf4v40fshct.lambda-url.us-east-1.on.aws/ ===
+[ec2-user@ip-172-31-74-96 lsc-lab4-aws-cloud-r2-emila2025]$ aws lambda invoke --function-name lsc-knn-container \
+  --cli-binary-format raw-in-base64-out \
+  --payload "$(python3 -c 'import json; q=json.load(open("loadtest/query.json")); print(json.dumps({"body": json.dumps(q)}))')" \
+  /tmp/out-container.json
+
+cat /tmp/out-container.json
+{
+    "StatusCode": 200,
+    "ExecutedVersion": "$LATEST"
+}
+{"statusCode": 200, "headers": {"Content-Type": "application/json", "X-Server-Time-Ms": "77.945", "X-Instance-Id": "2026/03/28/[$LATEST]3f8bf82ef33640268156ba57a801418a", "X-Cold-Start": "true"}, "body": "{\"results\": [{\"index\": 35859, \"distance\": 12.001459121704102}, {\"index\": 24682, \"distance\": 12.059946060180664}, {\"index\": 35397, \"distance\": 12.487079620361328}, {\"index\": 20160, \"distance\": 12.489519119262695}, {\"index\": 30454, \"distance\": 12.499402046203613}], \"query_time_ms\": 77.945, \"instance_id\": \"2026/03/28/[$LATEST]3f8bf82ef33640268156ba57a801418a\", \"cold_start\": true}"}[ec2-user@ip-172-31-74-96 lsc-lab4-aws-cloud-r2-emila2025]$
+
+
+
+
+
+
+ALB DNS: lsc-knn-alb-848748583.us-east-1.elb.amazonaws.com
+=== Fargate done. ALB URL: http://lsc-knn-alb-848748583.us-east-1.elb.amazonaws.com ===
+
+[ec2-user@ip-172-31-74-96 lsc-lab4-aws-cloud-r2-emila2025]$ curl -X POST -H "Content-Type: application/json" -d @loadtest/query.json \
+  http://lsc-knn-alb-848748583.us-east-1.elb.amazonaws.com/search
+{"instance_id":"ip-172-31-36-183.ec2.internal","query_time_ms":25.042,"results":[{"distance":12.001459121704102,"index":35859},{"distance":12.059946060180664,"index":24682},{"distance":12.487079620361328,"index":35397},{"distance":12.489519119262695,"index":20160},{"distance":12.499402046203613,"index":30454}]}
+
+
+
+
+
+
+=== EC2 App done. Public IP: 35.175.112.228 ===
+URL: http://35.175.112.228:8080
+
+[ec2-user@ip-172-31-74-96 lsc-lab4-aws-cloud-r2-emila2025]$ curl -X POST -H "Content-Type: application/json" -d @loadtest/query.json \
+  http://35.175.112.228:8080/search
+{"instance_id":"eecf3f59d779","query_time_ms":24.069,"results":[{"distance":12.001459121704102,"index":35859},{"distance":12.059946060180664,"index":24682},{"distance":12.487079620361328,"index":35397},{"distance":12.489519119262695,"index":20160},{"distance":12.499402046203613,"index":30454}]}
+
+
